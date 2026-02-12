@@ -11,7 +11,6 @@ import os
 import re
 from typing import Dict
 
-
 import requests
 from fastapi import FastAPI, HTTPException  # pylint: disable=import-error
 # pylint: disable=no-name-in-module
