@@ -14,14 +14,14 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract version
+      - name: Set image tag (short SHA)
         id: vars
         run: |
-          VERSION=$(grep -m1 version pyproject.toml | cut -d'"' -f2 || echo "0.1.0")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "tag=${SHORT_SHA}" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -33,10 +33,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push
+      - name: Build and Push Image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/ssid-email-lookup:v${{ steps.vars.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/ssid-email-lookup:${{ steps.vars.outputs.tag }}
