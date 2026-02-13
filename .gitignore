@@ -2,3 +2,5 @@ __pycache__/
 .env.secrets
 .venv/
 *.pyc
+tests/
+.pytest_cache/

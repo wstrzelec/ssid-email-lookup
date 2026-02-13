@@ -3,6 +3,27 @@
 This module provides FastAPI endpoints to retrieve student IDs or email
 addresses from the SMM API. Designed to run in Kubernetes with
 environment-based configuration.
+
+Testing locally:
+1. Set required credentials in your shell:
+    export SMM_API_KEY="<key>" SMM_API_PASSWORD="<password>"
+2. Start the API from this folder:
+    python ssid_email.py
+3. Run quick checks:
+    curl -i http://localhost:8000/health
+        curl -i -X POST http://localhost:8000/lookup \
+            -H 'Content-Type: application/json' \
+      -d '{"student_id":"wstrzelec@sans.org"}'
+        curl -i -X POST http://localhost:8000/lookup \
+            -H 'Content-Type: application/json' \
+      -d '{"student_id":"1452913"}'
+
+Testing in Kubernetes:
+1. Ensure app is deployed and service exists in namespace local-dev:
+    kubectl -n local-dev get pods,svc
+2. Port-forward the service:
+    kubectl -n local-dev port-forward svc/ssid-email-lookup 8000:80
+3. Run the same health and lookup curl commands against localhost:8000.
 """
 
 import json
